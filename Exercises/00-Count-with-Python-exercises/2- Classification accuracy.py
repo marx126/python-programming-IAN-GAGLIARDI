@@ -1,4 +1,4 @@
-#Classification accuracy
+# Classification accuracy
 accuracy = 300 / 365
 accuracy_percentage = accuracy * 100
 
