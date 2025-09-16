@@ -17,3 +17,53 @@ Erik Eriksson 31
 Gore Bord 55
 Jakob Kallander 65
 Fredrika Ulven 10
+
+Sorted alphabetically:
+
+Adam Gustafsson 25
+Björn Björnsson 39
+Bose Bosseson 32
+Ella Ester 41
+Emil Johansson 23
+Emma Boden 32
+Erik Eriksson 31
+Fredrika Ulven 10
+Gore Bord 55
+Hanna Karlsson 23
+Håkan Håkanson 24
+Ida Håkansson 23
+Jakob Kallander 65
+Johan Johansson 42
+Jonas Jonasson 31
+Karl Karlsson 32
+Ove Karlsten 41
+Sven Erik Karlsson 13
+Sven Erik Lundin 39
+
+Sorted results:
+
+Grade: A
+Jakob Kallander 65
+Grade: B
+Gore Bord 55
+Grade: C
+Ella Ester 41
+Johan Johansson 42
+Ove Karlsten 41
+Grade: D
+Björn Björnsson 39
+Bose Bosseson 32
+Emma Boden 32
+Erik Eriksson 31
+Jonas Jonasson 31
+Karl Karlsson 32
+Sven Erik Lundin 39
+Grade: E
+Adam Gustafsson 25
+Emil Johansson 23
+Hanna Karlsson 23
+Håkan Håkanson 24
+Ida Håkansson 23
+Grade: F
+Fredrika Ulven 10
+Sven Erik Karlsson 13

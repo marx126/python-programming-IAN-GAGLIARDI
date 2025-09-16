@@ -22,7 +22,7 @@ for rolls in rolls_list:
 # C
 plt.plot(probabilities, '-*')
 plt.title("Probability of six for different number of rolls")
-plt.xticks([0,1,2,3,4,5], rolls_list);
+plt.xticks([0,1,2,3,4,5], rolls_list)
 plt.xlabel("Number of dice rolls")
 plt.ylabel("Probability")
 plt.show()
