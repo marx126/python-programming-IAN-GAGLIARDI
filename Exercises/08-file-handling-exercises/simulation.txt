@@ -1,0 +1,40 @@
+Number of rolls: 10
+Ones: 3, probability: 0.200
+Twos: 0, probability: 0.200
+Threes: 1, probability: 0.100
+Fours: 2, probability: 0.200
+Fives: 1, probability: 0.100
+Sixes: 3, probability: 0.200
+
+Number of rolls: 100
+Ones: 26, probability: 0.130
+Twos: 18, probability: 0.150
+Threes: 13, probability: 0.200
+Fours: 20, probability: 0.180
+Fives: 12, probability: 0.190
+Sixes: 11, probability: 0.150
+
+Number of rolls: 1000
+Ones: 157, probability: 0.174
+Twos: 177, probability: 0.168
+Threes: 155, probability: 0.165
+Fours: 161, probability: 0.161
+Fives: 163, probability: 0.164
+Sixes: 187, probability: 0.168
+
+Number of rolls: 10000
+Ones: 1776, probability: 0.167
+Twos: 1669, probability: 0.168
+Threes: 1610, probability: 0.160
+Fours: 1609, probability: 0.165
+Fives: 1678, probability: 0.171
+Sixes: 1658, probability: 0.168
+
+Number of rolls: 100000
+Ones: 16671, probability: 0.166
+Twos: 16550, probability: 0.166
+Threes: 16790, probability: 0.166
+Fours: 16554, probability: 0.167
+Fives: 16656, probability: 0.167
+Sixes: 16779, probability: 0.167
+
