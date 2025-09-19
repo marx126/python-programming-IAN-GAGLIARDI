@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 data_points = "/Users/ianpablogagliardibianchini/Projects/python-programming-IAN-GAGLIARDI/Labs/Laboration 2 - Icke-Generaliserande Maskinintelligens/datapoints.txt"
-#test_points = "/Users/ianpablogagliardibianchini/Projects/python-programming-IAN-GAGLIARDI/Labs/Laboration 2 - Icke-Generaliserande Maskinintelligens/testpoints.txt"
+test_points = "/Users/ianpablogagliardibianchini/Projects/python-programming-IAN-GAGLIARDI/Labs/Laboration 2 - Icke-Generaliserande Maskinintelligens/testpoints.txt"
 
 def load_data(data_path) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     # Read file and create a numpy array
