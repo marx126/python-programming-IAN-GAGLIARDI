@@ -37,12 +37,15 @@ def load_test_points(test_points):
     return np.array(points)
 
 def euclidean_distance(p1, p2):
-    pass
+    distance = np.linalg.norm(p1 - p2)
+    return distance
+
+def distances(test_point, pikachu_x, pikachu_y, pichu_x, pichu_y):
 
 def main():
     pikachu_x, pikachu_y, pichu_x, pichu_y = load_data(data_points)
     plot_data_points(pikachu_x, pikachu_y, pichu_x, pichu_y)
-
+        
 
 if __name__ == "__main__":
     main()
