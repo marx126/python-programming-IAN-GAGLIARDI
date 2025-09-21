@@ -37,15 +37,67 @@ def load_test_points(test_points):
     return np.array(points)
 
 def euclidean_distance(p1, p2):
-    distance = np.linalg.norm(p1 - p2)
-    return distance
+    p1 = np.asarray(p1, dtype=float)
+    p2 = np.asarray(p2, dtype=float)
+    return float(np.linalg.norm(p1 - p2))
 
-def distances(test_point, pikachu_x, pikachu_y, pichu_x, pichu_y):
+def distances(test_point, pikachu_x, pikachu_y, pichu_x, pichu_y): # Returns a list of tuples (distance, pokemon_type, x, y)
+    dists = []
+
+    for i in range(len(pikachu_x)):
+        dp = np.array([pikachu_x[i], pikachu_y[i]])
+        d = euclidean_distance(test_point, dp)
+        dists.append((d, "Pikachu", dp[0], dp[1]))
+
+    for i in range(len(pichu_x)):
+        dp = np.array([pichu_x[i], pichu_y[i]])
+        d = euclidean_distance(test_point, dp)
+        dists.append((d, "Pichu", dp[0], dp[1]))
+
+    return dists
+
+def user_input():
+    while True:
+        try:
+            x = float(input("Enter width (cm): ").strip())
+            y = float(input("Enter height (cm): ").strip())
+
+            if x < 0 or y < 0:
+                raise ValueError
+
+            return np.array([x, y], dtype=float)
+        except ValueError:
+            print("Please enter valid positive numbers. Examples: 25 or 23.6")
 
 def main():
     pikachu_x, pikachu_y, pichu_x, pichu_y = load_data(data_points)
     plot_data_points(pikachu_x, pikachu_y, pichu_x, pichu_y)
-        
+    t_points = load_test_points(test_points)
 
+    for t in t_points:
+        dists = distances(t, pikachu_x, pikachu_y, pichu_x, pichu_y)
+        nearest = dists[0]
+        for i in dists[1:]:
+            if i[0] < nearest[0]:
+                nearest = i
+        print(f"Sample {t} -> classified as {nearest[1]}. nearest is {nearest[1]} at distance {nearest[0]:.2f}")
+
+    while True:
+        user_test = input("Classify your own point. Type 1 to continue or 2 to skip. ")
+        if user_test == "2":
+            break
+        elif user_test == "1":
+            user_points = user_input()
+            user_point_distance = distances(user_points, pikachu_x, pikachu_y, pichu_x, pichu_y)
+            nearest = user_point_distance[0]
+            for i in user_point_distance[1:]:
+                if i[0] < nearest[0]:
+                    nearest = i
+            print(f"Sample {user_points} -> classified as {nearest[1]}. nearest is {nearest[1]} at distance {nearest[0]:.2f}")
+            break
+        else:
+            print("Please type one of the given choices")
+
+    
 if __name__ == "__main__":
     main()
