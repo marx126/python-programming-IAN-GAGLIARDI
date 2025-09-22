@@ -86,7 +86,7 @@ def ten_closest(dists_list: list): # returns two lists, one with pikachu points 
 def plot_10_nearest(pikachu_points, pichu_points, user_points):
     pikachu_points = np.asarray(pikachu_points)
     pichu_points  = np.asarray(pichu_points)
-    
+
     plt.scatter(pikachu_points[:, 0], pikachu_points[:, 1], label="Pikachu points", color="yellow")
     plt.scatter(pichu_points[:, 0], pichu_points[:, 1], label="Pichu points", color="blue")
     plt.scatter(user_points[0], user_points[1], label="User point", color="red")
@@ -118,12 +118,13 @@ def main():
                 if i[0] < nearest[0]:
                     nearest = i
             print(f"Sample {user_points} -> classified as {nearest[1]}. nearest is {nearest[1]} at distance {nearest[0]:.2f}")
+            pikachu_nearest, pichu_nearest = ten_closest(distances(user_points, pikachu_x, pikachu_y, pichu_x, pichu_y))
+            plot_10_nearest(pikachu_nearest, pichu_nearest, user_points)
             break
         else:
             print("Please type one of the given choices")
             
-    pikachu_nearest, pichu_nearest = ten_closest(distances(user_points, pikachu_x, pikachu_y, pichu_x, pichu_y))
-    plot_10_nearest(pikachu_nearest, pichu_nearest, user_points)
+
 
 if __name__ == "__main__":
     main()
