@@ -1,6 +1,7 @@
 # Klassificera Pokémons med Nearest Neighbour algoritmen
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 
 data_points = "/Users/ianpablogagliardibianchini/Projects/python-programming-IAN-GAGLIARDI/Labs/Laboration 2 - Icke-Generaliserande Maskinintelligens/datapoints.txt"
 test_points = "/Users/ianpablogagliardibianchini/Projects/python-programming-IAN-GAGLIARDI/Labs/Laboration 2 - Icke-Generaliserande Maskinintelligens/testpoints.txt"
@@ -23,7 +24,7 @@ def plot_data_points(pikachu_x, pikachu_y, pichu_x, pichu_y):
     plt.scatter(pikachu_x,pikachu_y, color="yellow", label="Pikachu")
     plt.scatter(pichu_x,pichu_y, color="blue", label="Pichu")
     plt.legend()
-    return plt.show()
+    plt.show()
 
 def load_test_points(test_points):
     with open(test_points, "r") as f:
@@ -89,8 +90,7 @@ def plot_10_nearest(pikachu_x, pikachu_y, pichu_x, pichu_y, pikachu_nearest, pic
     plt.scatter(pichu_x, pichu_y, color="blue", label="Pichu")
 
     if len(pikachu_nearest) > 0:
-        plt.scatter(pikachu_nearest[:, 0], pikachu_nearest[:, 1], edgecolors='black', linewidths=2, color="yellow",
-                    label="Near pikachu")
+        plt.scatter(pikachu_nearest[:, 0], pikachu_nearest[:, 1], edgecolors='black', linewidths=2, color="yellow", label="Near pikachu")
     if len(pichu_nearest) > 0:
         plt.scatter(pichu_nearest[:, 0], pichu_nearest[:, 1], edgecolors='black', linewidths=2, color="blue", label="Near pichu")
 
@@ -98,6 +98,7 @@ def plot_10_nearest(pikachu_x, pikachu_y, pichu_x, pichu_y, pikachu_nearest, pic
 
     plt.legend()
     plt.show()
+
 
 def main():
     pikachu_x, pikachu_y, pichu_x, pichu_y = load_data(data_points)
@@ -113,7 +114,7 @@ def main():
         print(f"Sample {t} -> classified as {nearest[1]}. nearest is {nearest[1]} at distance {nearest[0]:.2f}")
 
     while True:
-        user_test = input("Classify your own point. Type 1 to continue or 2 to skip. ")
+        user_test = input(f"\nClassify your own point. Type 1 to continue or 2 to skip. ")
         if user_test == "2":
             break
         elif user_test == "1":
@@ -123,8 +124,17 @@ def main():
             for i in user_point_distance[1:]:
                 if i[0] < nearest[0]:
                     nearest = i
+            print(f"\nClassification by nearest point:")
             print(f"Sample {user_points} -> classified as {nearest[1]}. nearest is {nearest[1]} at distance {nearest[0]:.2f}")
             pikachu_nearest, pichu_nearest = ten_closest(distances(user_points, pikachu_x, pikachu_y, pichu_x, pichu_y))
+            print("\nClassification by 10 nearest points:")
+            if len(pikachu_nearest) > len(pichu_nearest):
+                print(f"{user_points} is classified as a Pikachu")
+            elif len(pikachu_nearest) < len(pichu_nearest):
+                print(f"{user_points} is classified as a Pichu")
+            else:
+                r_choice = random.choice(["pikachu", "Pichu"])
+                print(f"Number of pichu and pikachu near your point are equal. Your point has been randomly classified as a {r_choice}")
             plot_10_nearest(pikachu_x, pikachu_y, pichu_x, pichu_y, pikachu_nearest, pichu_nearest, user_points)
             break
         else:
