@@ -69,6 +69,30 @@ def user_input():
         except ValueError:
             print("Please enter valid positive numbers. Examples: 25 or 23.6")
 
+def ten_closest(dists_list: list): # returns two lists, one with pikachu points and the other one with pichu points
+    sorted_points = sorted(dists_list, key=lambda x: x[0])[:10]
+
+    pikachu_points = []
+    pichu_points = []
+
+    for d, label, x, y in sorted_points:
+        if label == "Pikachu":
+            pikachu_points.append((x, y))
+        else:
+            pichu_points.append((x, y))
+
+    return np.array(pikachu_points, dtype=float), np.array(pichu_points, dtype=float)
+
+def plot_10_nearest(pikachu_points, pichu_points, user_points):
+    pikachu_points = np.asarray(pikachu_points)
+    pichu_points  = np.asarray(pichu_points)
+    
+    plt.scatter(pikachu_points[:, 0], pikachu_points[:, 1], label="Pikachu points", color="yellow")
+    plt.scatter(pichu_points[:, 0], pichu_points[:, 1], label="Pichu points", color="blue")
+    plt.scatter(user_points[0], user_points[1], label="User point", color="red")
+    plt.legend()
+    return plt.show()
+
 def main():
     pikachu_x, pikachu_y, pichu_x, pichu_y = load_data(data_points)
     plot_data_points(pikachu_x, pikachu_y, pichu_x, pichu_y)
@@ -97,7 +121,9 @@ def main():
             break
         else:
             print("Please type one of the given choices")
+            
+    pikachu_nearest, pichu_nearest = ten_closest(distances(user_points, pikachu_x, pikachu_y, pichu_x, pichu_y))
+    plot_10_nearest(pikachu_nearest, pichu_nearest, user_points)
 
-    
 if __name__ == "__main__":
     main()
