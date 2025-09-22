@@ -83,15 +83,21 @@ def ten_closest(dists_list: list): # returns two lists, one with pikachu points 
 
     return np.asarray(pikachu_points, dtype=float), np.asarray(pichu_points, dtype=float)
 
-def plot_10_nearest(pikachu_points, pichu_points, user_points):
-#    pikachu_points = np.asarray(pikachu_points)
-#    pichu_points  = np.asarray(pichu_points)
+def plot_10_nearest(pikachu_x, pikachu_y, pichu_x, pichu_y, pikachu_nearest, pichu_nearest, user_points):
 
-    plt.scatter(pikachu_points[:, 0], pikachu_points[:, 1], label="Pikachu points", color="yellow")
-    plt.scatter(pichu_points[:, 0], pichu_points[:, 1], label="Pichu points", color="blue")
-    plt.scatter(user_points[0], user_points[1], label="User point", color="red")
+    plt.scatter(pikachu_x, pikachu_y, color="yellow", label="Pikachu")
+    plt.scatter(pichu_x, pichu_y, color="blue", label="Pichu")
+
+    if len(pikachu_nearest) > 0:
+        plt.scatter(pikachu_nearest[:, 0], pikachu_nearest[:, 1], edgecolors='black', linewidths=2, color="yellow",
+                    label="Near pikachu")
+    if len(pichu_nearest) > 0:
+        plt.scatter(pichu_nearest[:, 0], pichu_nearest[:, 1], edgecolors='black', linewidths=2, color="blue", label="Near pichu")
+
+    plt.scatter(user_points[0], user_points[1], color="red", label="Your point")
+
     plt.legend()
-    return plt.show()
+    plt.show()
 
 def main():
     pikachu_x, pikachu_y, pichu_x, pichu_y = load_data(data_points)
@@ -119,7 +125,7 @@ def main():
                     nearest = i
             print(f"Sample {user_points} -> classified as {nearest[1]}. nearest is {nearest[1]} at distance {nearest[0]:.2f}")
             pikachu_nearest, pichu_nearest = ten_closest(distances(user_points, pikachu_x, pikachu_y, pichu_x, pichu_y))
-            plot_10_nearest(pikachu_nearest, pichu_nearest, user_points)
+            plot_10_nearest(pikachu_x, pikachu_y, pichu_x, pichu_y, pikachu_nearest, pichu_nearest, user_points)
             break
         else:
             print("Please type one of the given choices")
