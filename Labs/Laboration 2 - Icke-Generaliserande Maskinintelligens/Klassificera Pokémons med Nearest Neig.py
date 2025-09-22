@@ -114,6 +114,7 @@ def split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, seed=None):
     if seed is not None:
         random.seed(seed)
 
+    # zip together x and y so its easier to work with the data
     pikachu_points = list(zip(pikachu_x, pikachu_y))
     pichu_points = list(zip(pichu_x, pichu_y))
 
@@ -126,6 +127,7 @@ def split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, seed=None):
     pichu_train_data = pichu_points[:50]
     pichu_test_data = pichu_points[50:75]
     
+    # unzip to have different arrays with all x and y values
     pikachu_x_train, pikachu_y_train = zip(*pikachu_train_data)
     pikachu_x_test, pikachu_y_test = zip(*pikachu_test_data)
 
@@ -141,6 +143,18 @@ def split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, seed=None):
         np.asarray(pichu_y_train,   dtype=float),
         np.asarray(pichu_x_test,    dtype=float),
         np.asarray(pichu_y_test,    dtype=float))
+
+def predict_10nn_points(x, y,
+                        pikachu_x_train, pikachu_y_train, 
+                        pichu_x_train, pichu_y_train,
+                        k=10, tie_break="closest"):
+    
+    X_train = np.column_stack([
+    np.r_[pikachu_x_train, pichu_x_train],
+    np.r_[pikachu_y_train, pichu_y_train]])
+
+    y_train = np.r_[np.ones(len(pikachu_x_train), dtype=int),
+                np.zeros(len(pichu_x_train), dtype=int)]
 
 def main():
     # Read data points file and plot in a graph
@@ -192,13 +206,12 @@ def main():
             elif len(pikachu_nearest) < len(pichu_nearest):
                 print(f"{user_point} is classified as a Pichu")
             else:
-                r_choice = random.choice(["pikachu", "Pichu"])
-                print(f"Number of pichu and pikachu near your point are equal. Your point has been randomly classified as a {r_choice}")
+                print(f"Number of pichu and pikachu near your point are equal. Your point has been classified as {nearest[1]} by nearest point instead.")
             plot_10_nearest(pikachu_x, pikachu_y, pichu_x, pichu_y, pikachu_nearest, pichu_nearest, user_point)
             break
         else:
             print("Please type one of the given choices")
 
-#    print(split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, 1))
+    print(split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, 1))
 if __name__ == "__main__":
     main()
