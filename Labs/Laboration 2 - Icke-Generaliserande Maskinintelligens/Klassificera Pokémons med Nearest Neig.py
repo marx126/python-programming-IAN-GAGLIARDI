@@ -109,6 +109,38 @@ def plot_10_nearest(pikachu_x, pikachu_y, pichu_x, pichu_y, pikachu_nearest, pic
     plt.legend()
     plt.show()
 
+def split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, seed=None):
+
+    if seed is not None:
+        random.seed(seed)
+
+    pikachu_points = list(zip(pikachu_x, pikachu_y))
+    pichu_points = list(zip(pichu_x, pichu_y))
+
+    random.shuffle(pikachu_points)
+    random.shuffle(pichu_points)
+
+    pikachu_train_data = pikachu_points[:50]
+    pikachu_test_data = pikachu_points[50:75]
+
+    pichu_train_data = pichu_points[:50]
+    pichu_test_data = pichu_points[50:75]
+    
+    pikachu_x_train, pikachu_y_train = zip(*pikachu_train_data)
+    pikachu_x_test, pikachu_y_test = zip(*pikachu_test_data)
+
+    pichu_x_train, pichu_y_train = zip(*pichu_train_data)
+    pichu_x_test, pichu_y_test = zip(*pichu_test_data)
+
+    return (
+        np.asarray(pikachu_x_train, dtype=float),
+        np.asarray(pikachu_y_train, dtype=float),
+        np.asarray(pikachu_x_test,  dtype=float),
+        np.asarray(pikachu_y_test,  dtype=float),
+        np.asarray(pichu_x_train,   dtype=float),
+        np.asarray(pichu_y_train,   dtype=float),
+        np.asarray(pichu_x_test,    dtype=float),
+        np.asarray(pichu_y_test,    dtype=float))
 
 def main():
     # Read data points file and plot in a graph
@@ -167,5 +199,6 @@ def main():
         else:
             print("Please type one of the given choices")
 
+#    print(split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, 1))
 if __name__ == "__main__":
     main()
