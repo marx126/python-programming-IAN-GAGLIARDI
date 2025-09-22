@@ -81,11 +81,11 @@ def ten_closest(dists_list: list): # returns two lists, one with pikachu points 
         else:
             pichu_points.append((x, y))
 
-    return np.array(pikachu_points, dtype=float), np.array(pichu_points, dtype=float)
+    return np.asarray(pikachu_points, dtype=float), np.asarray(pichu_points, dtype=float)
 
 def plot_10_nearest(pikachu_points, pichu_points, user_points):
-    pikachu_points = np.asarray(pikachu_points)
-    pichu_points  = np.asarray(pichu_points)
+#    pikachu_points = np.asarray(pikachu_points)
+#    pichu_points  = np.asarray(pichu_points)
 
     plt.scatter(pikachu_points[:, 0], pikachu_points[:, 1], label="Pikachu points", color="yellow")
     plt.scatter(pichu_points[:, 0], pichu_points[:, 1], label="Pichu points", color="blue")
@@ -123,8 +123,6 @@ def main():
             break
         else:
             print("Please type one of the given choices")
-            
-
 
 if __name__ == "__main__":
     main()
