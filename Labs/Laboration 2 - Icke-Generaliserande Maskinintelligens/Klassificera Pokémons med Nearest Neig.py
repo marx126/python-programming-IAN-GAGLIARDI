@@ -120,7 +120,8 @@ def split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, seed=None):
 
     random.shuffle(pikachu_points)
     random.shuffle(pichu_points)
-
+    
+    # split data in 50 training points and 25 test points
     pikachu_train_data = pikachu_points[:50]
     pikachu_test_data = pikachu_points[50:75]
 
@@ -149,12 +150,40 @@ def predict_10nn_points(x, y,
                         pichu_x_train, pichu_y_train,
                         k=10, tie_break="closest"):
     
-    X_train = np.column_stack([
+    # Combine training data into a single array
+    x_train = np.column_stack([
     np.r_[pikachu_x_train, pichu_x_train],
     np.r_[pikachu_y_train, pichu_y_train]])
 
-    y_train = np.r_[np.ones(len(pikachu_x_train), dtype=int),
+    # Create labels for training data: 1 for Pikachu, 0 for Pichu
+    y_train = np.r_[np.ones(len(pikachu_x_train),dtype=int),
                 np.zeros(len(pichu_x_train), dtype=int)]
+    
+    # Calculate distances from the point (x, y) to all training points
+    test_points = np.array([x, y])
+    distances = np.linalg.norm(x_train - test_points, axis=1)
+
+    # Sort distances and get indices of the k nearest neighbors
+    nearest_indices = np.argsort(distances)[:k]
+    nearest_labels = y_train[nearest_indices]
+
+    # Count occurrences of each class in the nearest neighbors
+    pikachu_count = np.sum(nearest_labels == 1)
+    pichu_count = np.sum(nearest_labels == 0)
+
+    # Determine the predicted class based on counts
+    if pikachu_count > pichu_count:
+        return "Pikachu"
+    elif pichu_count > pikachu_count:
+        return "Pichu"
+    else:
+        # Tie-breaking strategy
+        if tie_break == "closest":
+            return "Pikachu" if nearest_labels[0] == 1 else "Pichu"
+        elif tie_break == "pikachu":
+            return "Pikachu"
+        else:
+            raise ValueError("Invalid tie_break value. Use 'closest' or 'pikachu'.")
 
 def main():
     # Read data points file and plot in a graph
@@ -212,6 +241,20 @@ def main():
         else:
             print("Please type one of the given choices")
 
-    print(split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, 1))
+    pikachu_x_train, pikachu_y_train, pikachu_x_test, pikachu_y_test, \
+    pichu_x_train, pichu_y_train, pichu_x_test, pichu_y_test = split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, seed=1)
+
+    # Classify pikachu test points
+    print("Classifying Pikachu test points:")
+    for x, y in zip(pikachu_x_test, pikachu_y_test):
+        pred = predict_10nn_points(x, y, pikachu_x_train, pikachu_y_train, pichu_x_train, pichu_y_train, k=10)
+        print(f"Test point ({x:.2f}, {y:.2f}) classified as: {pred}")
+
+    # Classify pichu test points
+    print("\nClassifying Pichu test points:")
+    for x, y in zip(pichu_x_test, pichu_y_test):
+        pred = predict_10nn_points(x, y, pikachu_x_train, pikachu_y_train, pichu_x_train, pichu_y_train, k=10)
+        print(f"Test point ({x:.2f}, {y:.2f}) classified as: {pred}")
+        
 if __name__ == "__main__":
     main()
