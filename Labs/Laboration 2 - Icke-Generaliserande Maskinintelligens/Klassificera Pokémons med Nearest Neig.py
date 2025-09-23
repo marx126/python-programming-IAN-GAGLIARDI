@@ -240,11 +240,11 @@ def main():
 
             # Classify dependig of number of pikachu/pichu near user point
             if len(pikachu_nearest) > len(pichu_nearest):
-                print(f"{user_point} is classified as a Pikachu")
+                print(f"Sample {user_point} -> is classified as a Pikachu. Number of pikachus nearby: {len(pikachu_nearest)}\n")
             elif len(pikachu_nearest) < len(pichu_nearest):
-                print(f"{user_point} is classified as a Pichu")
+                print(f"Sample {user_point} -> is classified as a Pichu. Number of pichus nearby: {len(pichu_nearest)}\n")
             else:
-                print(f"Number of pichu and pikachu near your point are equal. Your point has been classified as {nearest[1]} by nearest point instead.")
+                print(f"Number of pichu and pikachu near {user_point} are equal. {user_point} has been classified as {nearest[1]} by nearest point instead.\n")
             plot_10_nearest(pikachu_x, pikachu_y, pichu_x, pichu_y, pikachu_nearest, pichu_nearest, user_point)
             break
         else:
@@ -280,7 +280,7 @@ def main():
 
     # Calculate and print mean accuracy
     mean_accuracy = sum(accuracies) / len(accuracies)
-    print(f"\nMean accuracy over {10} iterations: {mean_accuracy:.2f}")
+    print(f"\nMean accuracy over 10 iterations: {mean_accuracy:.2f}")
 
     # Plot accuracies over iterations
     plt.plot(range(1, 10 + 1), accuracies, marker='o', label="Accuracy per iteration")
