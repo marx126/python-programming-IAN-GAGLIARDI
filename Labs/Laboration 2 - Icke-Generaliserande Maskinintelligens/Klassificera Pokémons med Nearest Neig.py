@@ -2,10 +2,16 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import random
-
+import urllib.request
 # Save files paths in variables
-data_points = "/Users/ianpablogagliardibianchini/Projects/python-programming-IAN-GAGLIARDI/Labs/Laboration 2 - Icke-Generaliserande Maskinintelligens/datapoints.txt"
-test_points = "/Users/ianpablogagliardibianchini/Projects/python-programming-IAN-GAGLIARDI/Labs/Laboration 2 - Icke-Generaliserande Maskinintelligens/testpoints.txt"
+data_url = "https://raw.githubusercontent.com/marx126/python-programming-IAN-GAGLIARDI/refs/heads/main/Labs/Laboration%202%20-%20Icke-Generaliserande%20Maskinintelligens/datapoints.txt"
+test_url = "https://raw.githubusercontent.com/marx126/python-programming-IAN-GAGLIARDI/refs/heads/main/Labs/Laboration%202%20-%20Icke-Generaliserande%20Maskinintelligens/testpoints.txt"
+
+urllib.request.urlretrieve(data_url, "datapoints.txt")
+urllib.request.urlretrieve(test_url, "testpoints.txt")
+
+data_points = "datapoints.txt"
+test_points = "testpoints.txt"
 
 def load_data(data_path) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     # Read file and create a numpy array
