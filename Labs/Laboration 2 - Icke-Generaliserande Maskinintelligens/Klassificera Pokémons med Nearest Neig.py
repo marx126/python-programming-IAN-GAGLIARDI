@@ -7,8 +7,15 @@ import urllib.request
 data_url = "https://raw.githubusercontent.com/marx126/python-programming-IAN-GAGLIARDI/refs/heads/main/Labs/Laboration%202%20-%20Icke-Generaliserande%20Maskinintelligens/datapoints.txt"
 test_url = "https://raw.githubusercontent.com/marx126/python-programming-IAN-GAGLIARDI/refs/heads/main/Labs/Laboration%202%20-%20Icke-Generaliserande%20Maskinintelligens/testpoints.txt"
 
-urllib.request.urlretrieve(data_url, "datapoints.txt")
-urllib.request.urlretrieve(test_url, "testpoints.txt")
+try:
+    urllib.request.urlretrieve(data_url, "datapoints.txt")
+except Exception as e:
+    print(f"Fail to download datapoints.txt: {e}")
+
+try:
+    urllib.request.urlretrieve(test_url, "testpoints.txt")
+except Exception as e:
+    print(f"Fail to download testpoints.txt: {e}")
 
 data_points = "datapoints.txt"
 test_points = "testpoints.txt"
@@ -53,20 +60,27 @@ def euclidean_distance(p1, p2):
     return float(np.linalg.norm(p1 - p2))
 
 def distances(test_point, pikachu_x, pikachu_y, pichu_x, pichu_y): # Returns a list of tuples (distance, pokemon_type, x, y)
-    dists = []
+    distances_list = []
     # calculate distance between each test point and all data points
     # Return an organized list of tuples with all the distances
     for i in range(len(pikachu_x)):
         dp = np.array([pikachu_x[i], pikachu_y[i]])
         d = euclidean_distance(test_point, dp)
-        dists.append((d, "Pikachu", dp[0], dp[1]))
+        distances_list.append((d, "Pikachu", dp[0], dp[1]))
 
     for i in range(len(pichu_x)):
         dp = np.array([pichu_x[i], pichu_y[i]])
         d = euclidean_distance(test_point, dp)
-        dists.append((d, "Pichu", dp[0], dp[1]))
+        distances_list.append((d, "Pichu", dp[0], dp[1]))
 
-    return dists
+    return distances_list
+
+def classify_point(point, pikachu_x, pikachu_y, pichu_x, pichu_y):
+    # Classify a single point by finding the nearest neighbour
+    dists = distances(point, pikachu_x, pikachu_y, pichu_x, pichu_y)
+    nearest = min(dists, key=lambda x: x[0])  # Find the nearest neighbour
+    print(f"Sample {point} -> classified as {nearest[1]}. nearest is {nearest[1]} at distance {nearest[0]:.2f}")
+    return nearest
 
 def user_input():
     # Take a point from the user. Makes sure that is valid data (No strings or negative values)
@@ -204,15 +218,7 @@ def main():
     t_points = load_test_points(test_points)
 
     for point in t_points:
-        # Calculate distance between test point and every data point
-        dists = distances(point, pikachu_x, pikachu_y, pichu_x, pichu_y)
-        nearest = dists[0] # helper variable, assumes the first tuple of dists list is the nearest to test point
-
-        for i in dists[1:]:
-            if i[0] < nearest[0]: # i[0] is the distance of the current tuple
-                nearest = i       # nearest[0] is the distance of the current nearest
-
-        print(f"Sample {point} -> classified as {nearest[1]}. nearest is {nearest[1]} at distance {nearest[0]:.2f}")
+        classify_point(point, pikachu_x, pikachu_y, pichu_x, pichu_y)
 
     # loop will run untill user gives a valid input
     while True:
@@ -223,16 +229,9 @@ def main():
 
         elif user_test == "1":
             user_point = user_input()
-            # calculate distance between user point and data points
-            user_point_distance = distances(user_point, pikachu_x, pikachu_y, pichu_x, pichu_y)
-            nearest = user_point_distance[0] # Helper variable
 
-            for i in user_point_distance[1:]: # Find any point closer than actual nearest
-                if i[0] < nearest[0]: 
-                    nearest = i
-
-            print(f"\nClassification by nearest point:")
-            print(f"Sample {user_point} -> classified as {nearest[1]}. nearest is {nearest[1]} at distance {nearest[0]:.2f}")
+            # Classify point given by user
+            nearest = classify_point(user_point, pikachu_x, pikachu_y, pichu_x, pichu_y)
 
             # Get the 10 nearest points from the user point
             pikachu_nearest, pichu_nearest = ten_closest(distances(user_point, pikachu_x, pikachu_y, pichu_x, pichu_y))
