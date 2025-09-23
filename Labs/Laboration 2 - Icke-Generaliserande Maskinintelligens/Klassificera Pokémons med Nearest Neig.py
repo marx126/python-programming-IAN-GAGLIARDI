@@ -179,6 +179,14 @@ def predict_10nn_points(x, y,
         # Tie-breaking strategy
         if pikachu_count == pichu_count:
             return "Pikachu" if nearest_labels[0] == 1 else "Pichu"
+        
+def calculate_accuracy(predictions, true_labels):
+
+    # Calculate accuracy given a list of predictions and true labels
+    tp = sum(1 for pred, true in zip(predictions, true_labels) if pred == "Pikachu" and true == "Pikachu")
+    tn = sum(1 for pred, true in zip(predictions, true_labels) if pred == "Pichu" and true == "Pichu")
+    total = len(true_labels)
+    return (tp + tn) / total
 
 def main():
     # Read data points file and plot in a graph
@@ -236,20 +244,47 @@ def main():
         else:
             print("Please type one of the given choices")
 
-    pikachu_x_train, pikachu_y_train, pikachu_x_test, pikachu_y_test, \
-    pichu_x_train, pichu_y_train, pichu_x_test, pichu_y_test = split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, seed=1)
+    accuracies = []
 
-    # Classify pikachu test points
-    print("Classifying Pikachu test points:")
-    for x, y in zip(pikachu_x_test, pikachu_y_test):
-        pred = predict_10nn_points(x, y, pikachu_x_train, pikachu_y_train, pichu_x_train, pichu_y_train)
-        print(f"Test point ({x:.2f}, {y:.2f}) classified as: {pred}")
+    for i in range(10):
+        print(f"Iteration {i + 1}:")
+        pikachu_x_train, pikachu_y_train, pikachu_x_test, pikachu_y_test, \
+        pichu_x_train, pichu_y_train, pichu_x_test, pichu_y_test = split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, seed=i)
 
-    # Classify pichu test points
-    print("\nClassifying Pichu test points:")
-    for x, y in zip(pichu_x_test, pichu_y_test):
-        pred = predict_10nn_points(x, y, pikachu_x_train, pikachu_y_train, pichu_x_train, pichu_y_train)
-        print(f"Test point ({x:.2f}, {y:.2f}) classified as: {pred}")
+        # Lists to store predictions and true labels
+        predictions = []
+        true_labels = []
+
+        # Classify test points of Pikachu
+        for x, y in zip(pikachu_x_test, pikachu_y_test):
+            pred = predict_10nn_points(x, y, pikachu_x_train, pikachu_y_train, pichu_x_train, pichu_y_train)
+            predictions.append(pred)
+            true_labels.append("Pikachu")
+
+        # Classify test points of Pichu
+        for x, y in zip(pichu_x_test, pichu_y_test):
+            pred = predict_10nn_points(x, y, pikachu_x_train, pikachu_y_train, pichu_x_train, pichu_y_train)
+            predictions.append(pred)
+            true_labels.append("Pichu")
+
+        # Calculate accuracy
+        accuracy = calculate_accuracy(predictions, true_labels)
+        accuracies.append(accuracy)
+        print(f"Accuracy for iteration {i + 1}: {accuracy:.2f}")
+
+    # Calculate and print mean accuracy
+    mean_accuracy = sum(accuracies) / len(accuracies)
+    print(f"\nMean accuracy over {10} iterations: {mean_accuracy:.2f}")
+
+    # Plot accuracies over iterations
+    plt.plot(range(1, 10 + 1), accuracies, marker='o', label="Accuracy per iteration")
+    plt.axhline(y=mean_accuracy, color='r', linestyle='--', label=f"Mean accuracy: {mean_accuracy:.2f}")
+    plt.title("Accuracy over iterations")
+    plt.xlabel("Iteration")
+    plt.ylabel("Accuracy")
+    plt.legend()
+    plt.grid()
+    plt.show()
         
 if __name__ == "__main__":
     main()
