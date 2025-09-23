@@ -147,8 +147,7 @@ def split_data(pikachu_x, pikachu_y, pichu_x, pichu_y, seed=None):
 
 def predict_10nn_points(x, y,
                         pikachu_x_train, pikachu_y_train, 
-                        pichu_x_train, pichu_y_train,
-                        k=10, tie_break="closest"):
+                        pichu_x_train, pichu_y_train,):
     
     # Combine training data into a single array
     x_train = np.column_stack([
@@ -164,7 +163,7 @@ def predict_10nn_points(x, y,
     distances = np.linalg.norm(x_train - test_points, axis=1)
 
     # Sort distances and get indices of the k nearest neighbors
-    nearest_indices = np.argsort(distances)[:k]
+    nearest_indices = np.argsort(distances)[:10]
     nearest_labels = y_train[nearest_indices]
 
     # Count occurrences of each class in the nearest neighbors
@@ -178,12 +177,8 @@ def predict_10nn_points(x, y,
         return "Pichu"
     else:
         # Tie-breaking strategy
-        if tie_break == "closest":
+        if pikachu_count == pichu_count:
             return "Pikachu" if nearest_labels[0] == 1 else "Pichu"
-        elif tie_break == "pikachu":
-            return "Pikachu"
-        else:
-            raise ValueError("Invalid tie_break value. Use 'closest' or 'pikachu'.")
 
 def main():
     # Read data points file and plot in a graph
@@ -247,13 +242,13 @@ def main():
     # Classify pikachu test points
     print("Classifying Pikachu test points:")
     for x, y in zip(pikachu_x_test, pikachu_y_test):
-        pred = predict_10nn_points(x, y, pikachu_x_train, pikachu_y_train, pichu_x_train, pichu_y_train, k=10)
+        pred = predict_10nn_points(x, y, pikachu_x_train, pikachu_y_train, pichu_x_train, pichu_y_train)
         print(f"Test point ({x:.2f}, {y:.2f}) classified as: {pred}")
 
     # Classify pichu test points
     print("\nClassifying Pichu test points:")
     for x, y in zip(pichu_x_test, pichu_y_test):
-        pred = predict_10nn_points(x, y, pikachu_x_train, pikachu_y_train, pichu_x_train, pichu_y_train, k=10)
+        pred = predict_10nn_points(x, y, pikachu_x_train, pikachu_y_train, pichu_x_train, pichu_y_train)
         print(f"Test point ({x:.2f}, {y:.2f}) classified as: {pred}")
         
 if __name__ == "__main__":
