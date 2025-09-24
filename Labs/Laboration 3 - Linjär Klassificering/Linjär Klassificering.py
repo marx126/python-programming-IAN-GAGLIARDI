@@ -38,7 +38,10 @@ def plot_best_fit_line(x, y, slope, intercept):
     plt.ylabel('Feature 2')
     plt.title('Best Fit Line Visualization')
     
+    # Define the range for the best fit line using the minimum and maximum values of x
     x_fit = np.array([np.min(x), np.max(x)])
+
+    # y = kx + m
     y_fit = slope * x_fit + intercept
     plt.plot(x_fit, y_fit, color='red', label='Best Fit Line')
 
