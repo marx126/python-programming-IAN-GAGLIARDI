@@ -8,10 +8,12 @@ data_url = "https://raw.githubusercontent.com/marx126/python-programming-IAN-GAG
 urllib.request.urlretrieve(data_url, "unlabelled_data.csv")
 data_file = "unlabelled_data.csv"
 
+# Load data from CSV file
 def load_data(file_path):
     data = np.loadtxt(file_path, delimiter=',')
     return data
 
+# Plot the data points
 def plot_data(data):
     plt.scatter(data[:, 0], data[:, 1],s=10, c='blue', label='Data Points')
     plt.xlabel('Feature 1')
