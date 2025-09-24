@@ -11,20 +11,53 @@ data_file = "unlabelled_data.csv"
 # Load data from CSV file
 def load_data(file_path):
     data = np.loadtxt(file_path, delimiter=',')
-    return data
+    x = data[:, 0]
+    y = data[:, 1]
+    return x, y
 
-# Plot the data points
-def plot_data(data):
-    plt.scatter(data[:, 0], data[:, 1],s=10, c='blue', label='Data Points')
+# Calculate mean of points
+def calculate_mean(x, y):
+    mean_x = np.mean(x)
+    mean_y = np.mean(y)
+    return mean_x, mean_y
+
+# Calculate slope
+def calculate_slope(x, y, mean_x, mean_y):
+    slope = np.sum((x - mean_x) * (y - mean_y)) / np.sum((x - mean_x) ** 2)
+    return slope
+
+# Calculate intercept
+def calculate_intercept(mean_x, mean_y, slope):
+    intercept = mean_y - slope * mean_x
+    return intercept
+
+# Plot points and best fit line
+def plot_best_fit_line(x, y, slope, intercept):
+    plt.scatter(x, y, s=10, c='blue', label='Data Points')
     plt.xlabel('Feature 1')
     plt.ylabel('Feature 2')
-    plt.title('Data Points Visualization')
+    plt.title('Best Fit Line Visualization')
+    
+    x_fit = np.array([np.min(x), np.max(x)])
+    y_fit = slope * x_fit + intercept
+    plt.plot(x_fit, y_fit, color='red', label='Best Fit Line')
+
     plt.legend()
     plt.show()
 
 def main():
-    data = load_data(data_file)
-    plot_data(data)
+    x, y = load_data(data_file)
+
+    mean_x, mean_y = calculate_mean(x, y)
+    print(f"Mean of Feature 1: {mean_x}, Mean of Feature 2: {mean_y}")
+
+    slope = calculate_slope(x, y, mean_x, mean_y)
+    print(f"Slope of the best fit line: {slope}")
+
+    intercept = calculate_intercept(mean_x, mean_y, slope)
+    print(f"Intercept of the best fit line: {intercept}")
+    
+    plot_best_fit_line(x, y, slope, intercept)
 
 if __name__ == "__main__":
     main()
