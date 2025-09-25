@@ -64,5 +64,4 @@ def main():
     plot_data(above_list, below_list, x_vals, y_vals)
     create_csv(above_list, below_list)
 
-if __name__ == "__main__":
-    main()
+main()

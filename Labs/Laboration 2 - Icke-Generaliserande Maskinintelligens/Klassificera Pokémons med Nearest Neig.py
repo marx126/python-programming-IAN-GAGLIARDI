@@ -62,7 +62,6 @@ def euclidean_distance(p1, p2):
 def distances(test_point, pikachu_x, pikachu_y, pichu_x, pichu_y): # Returns a list of tuples (distance, pokemon_type, x, y)
     distances_list = []
     # calculate distance between each test point and all data points
-    # Return an organized list of tuples with all the distances
     for i in range(len(pikachu_x)):
         dp = np.array([pikachu_x[i], pikachu_y[i]])
         d = euclidean_distance(test_point, dp)
@@ -72,7 +71,7 @@ def distances(test_point, pikachu_x, pikachu_y, pichu_x, pichu_y): # Returns a l
         dp = np.array([pichu_x[i], pichu_y[i]])
         d = euclidean_distance(test_point, dp)
         distances_list.append((d, "Pichu", dp[0], dp[1]))
-
+    # Return an organized list of tuples with all the distances
     return distances_list
 
 def classify_point(point, pikachu_x, pikachu_y, pichu_x, pichu_y):
@@ -81,6 +80,43 @@ def classify_point(point, pikachu_x, pikachu_y, pichu_x, pichu_y):
     nearest = min(dists, key=lambda x: x[0])  # Find the nearest neighbour
     print(f"Sample {point} -> classified as {nearest[1]}. nearest is {nearest[1]} at distance {nearest[0]:.2f}")
     return nearest
+
+def classify_test_file_points(test_points, pikachu_x, pikachu_y, pichu_x, pichu_y):
+    # Read test points file and calculate distances to classify test points as
+    # pikachu or pichu
+    t_points = load_test_points(test_points)
+
+    for point in t_points:
+        classify_point(point, pikachu_x, pikachu_y, pichu_x, pichu_y)
+
+def user_point_classification(pikachu_x, pikachu_y, pichu_x, pichu_y):
+    while True:
+        user_test = input(f"\nClassify your own point. Type 1 to continue or 2 to skip. ")
+
+        if user_test == "2":
+            return
+
+        elif user_test == "1":
+            user_point = user_input()
+
+            # Classify point given by user
+            nearest = classify_point(user_point, pikachu_x, pikachu_y, pichu_x, pichu_y)
+
+            # Get the 10 nearest points from the user point
+            pikachu_nearest, pichu_nearest = ten_closest(distances(user_point, pikachu_x, pikachu_y, pichu_x, pichu_y))
+            print("\nClassification by 10 nearest points:")
+
+            # Classify dependig of number of pikachu/pichu near user point
+            if len(pikachu_nearest) > len(pichu_nearest):
+                print(f"Sample {user_point} -> is classified as a Pikachu. Number of pikachus nearby: {len(pikachu_nearest)}\n")
+            elif len(pikachu_nearest) < len(pichu_nearest):
+                print(f"Sample {user_point} -> is classified as a Pichu. Number of pichus nearby: {len(pichu_nearest)}\n")
+            else:
+                print(f"Number of pichu and pikachu near {user_point} are equal. {user_point} has been classified as {nearest[1]} by nearest point instead.\n")
+            plot_10_nearest(pikachu_x, pikachu_y, pichu_x, pichu_y, pikachu_nearest, pichu_nearest, user_point)
+            return
+        else:
+            print("Please type one of the given choices")
 
 def user_input():
     # Take a point from the user. Makes sure that is valid data (No strings or negative values)
@@ -120,9 +156,9 @@ def plot_10_nearest(pikachu_x, pikachu_y, pichu_x, pichu_y, pikachu_nearest, pic
 
     # Make sure there is at least one pikachu or pichu point near point given by user
     if len(pikachu_nearest) > 0:
-        plt.scatter(pikachu_nearest[:, 0], pikachu_nearest[:, 1], edgecolors='black', linewidths=2, color="yellow", label="Near pikachu")
+        plt.scatter(pikachu_nearest[:, 0], pikachu_nearest[:, 1], edgecolors="black", linewidths=2, color="yellow", label="Near pikachu")
     if len(pichu_nearest) > 0:
-        plt.scatter(pichu_nearest[:, 0], pichu_nearest[:, 1], edgecolors='black', linewidths=2, color="blue", label="Near pichu")
+        plt.scatter(pichu_nearest[:, 0], pichu_nearest[:, 1], edgecolors="black", linewidths=2, color="blue", label="Near pichu")
 
     plt.scatter(user_points[0], user_points[1], color="red", label="Your point")
 
@@ -208,49 +244,8 @@ def calculate_accuracy(predictions, true_labels):
     total = len(true_labels)
     return (tp + tn) / total
 
-def main():
-    # Read data points file and plot in a graph
-    pikachu_x, pikachu_y, pichu_x, pichu_y = load_data(data_points)
-    plot_data_points(pikachu_x, pikachu_y, pichu_x, pichu_y)
-
-    # Read test points file and calculate distances to classify test points as
-    # pikachu or pichu
-    t_points = load_test_points(test_points)
-
-    for point in t_points:
-        classify_point(point, pikachu_x, pikachu_y, pichu_x, pichu_y)
-
-    # loop will run untill user gives a valid input
-    while True:
-        user_test = input(f"\nClassify your own point. Type 1 to continue or 2 to skip. ")
-
-        if user_test == "2":
-            break
-
-        elif user_test == "1":
-            user_point = user_input()
-
-            # Classify point given by user
-            nearest = classify_point(user_point, pikachu_x, pikachu_y, pichu_x, pichu_y)
-
-            # Get the 10 nearest points from the user point
-            pikachu_nearest, pichu_nearest = ten_closest(distances(user_point, pikachu_x, pikachu_y, pichu_x, pichu_y))
-            print("\nClassification by 10 nearest points:")
-
-            # Classify dependig of number of pikachu/pichu near user point
-            if len(pikachu_nearest) > len(pichu_nearest):
-                print(f"Sample {user_point} -> is classified as a Pikachu. Number of pikachus nearby: {len(pikachu_nearest)}\n")
-            elif len(pikachu_nearest) < len(pichu_nearest):
-                print(f"Sample {user_point} -> is classified as a Pichu. Number of pichus nearby: {len(pichu_nearest)}\n")
-            else:
-                print(f"Number of pichu and pikachu near {user_point} are equal. {user_point} has been classified as {nearest[1]} by nearest point instead.\n")
-            plot_10_nearest(pikachu_x, pikachu_y, pichu_x, pichu_y, pikachu_nearest, pichu_nearest, user_point)
-            break
-        else:
-            print("Please type one of the given choices")
-
+def accuracy_over_iterations(pikachu_x, pikachu_y, pichu_x, pichu_y):
     accuracies = []
-
     for i in range(10):
         print(f"Iteration {i + 1}:")
         pikachu_x_train, pikachu_y_train, pikachu_x_test, pikachu_y_test, \
@@ -276,20 +271,43 @@ def main():
         accuracy = calculate_accuracy(predictions, true_labels)
         accuracies.append(accuracy)
         print(f"Accuracy for iteration {i + 1}: {accuracy:.2f}")
+    return accuracies
 
-    # Calculate and print mean accuracy
+# Calculate and print mean accuracy
+def calculate_mean_accuracy(accuracies):
     mean_accuracy = sum(accuracies) / len(accuracies)
     print(f"\nMean accuracy over 10 iterations: {mean_accuracy:.2f}")
+    return mean_accuracy
 
-    # Plot accuracies over iterations
-    plt.plot(range(1, 10 + 1), accuracies, marker='o', label="Accuracy per iteration")
-    plt.axhline(y=mean_accuracy, color='r', linestyle='--', label=f"Mean accuracy: {mean_accuracy:.2f}")
+# Plot accuracy over 10 iterations
+def plot_accuracy(accuracies, mean_accuracy):
+    plt.plot(range(1, 10 + 1), accuracies, marker="o", label="Accuracy per iteration")
+    plt.axhline(y=mean_accuracy, color="r", linestyle="--", label=f"Mean accuracy: {mean_accuracy:.2f}")
     plt.title("Accuracy over iterations")
     plt.xlabel("Iteration")
     plt.ylabel("Accuracy")
     plt.legend()
-    plt.grid()
     plt.show()
-        
+
+def main():
+    # Read data points file and plot in a graph
+    pikachu_x, pikachu_y, pichu_x, pichu_y = load_data(data_points)
+    plot_data_points(pikachu_x, pikachu_y, pichu_x, pichu_y)
+
+    # Classify test points from file and print results
+    classify_test_file_points(test_points, pikachu_x, pikachu_y, pichu_x, pichu_y)
+
+    # Classify user point by nearest neighbour and 10 nearest neighbours
+    user_point_classification(pikachu_x, pikachu_y, pichu_x, pichu_y)
+
+    # Calculate and print accuracy over 10 iterations
+    accuracies = accuracy_over_iterations(pikachu_x, pikachu_y, pichu_x, pichu_y)
+
+    # Calculate and print mean accuracy
+    mean_accuracy = calculate_mean_accuracy(accuracies)
+
+    # Plot accuracies over iterations
+    plot_accuracy(accuracies, mean_accuracy)
+
 if __name__ == "__main__":
     main()
