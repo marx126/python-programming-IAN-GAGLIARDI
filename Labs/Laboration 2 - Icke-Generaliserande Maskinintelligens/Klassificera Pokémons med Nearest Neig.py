@@ -78,7 +78,7 @@ def classify_point(point, pikachu_x, pikachu_y, pichu_x, pichu_y):
     # Classify a single point by finding the nearest neighbour
     dists = distances(point, pikachu_x, pikachu_y, pichu_x, pichu_y)
     nearest = min(dists, key=lambda x: x[0])  # Find the nearest neighbour
-    print(f"Sample {point} -> classified as {nearest[1]}. nearest is {nearest[1]} at distance {nearest[0]:.2f}")
+    print(f"Sample {point} -> classified as {nearest[1]}. Nearest point is a {nearest[1]} at distance {nearest[0]:.2f}")
     return nearest
 
 def classify_test_file_points(test_points, pikachu_x, pikachu_y, pichu_x, pichu_y):
