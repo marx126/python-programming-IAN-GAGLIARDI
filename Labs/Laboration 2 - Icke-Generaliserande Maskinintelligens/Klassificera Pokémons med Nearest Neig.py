@@ -100,6 +100,7 @@ def user_point_classification(pikachu_x, pikachu_y, pichu_x, pichu_y):
             user_point = user_input()
 
             # Classify point given by user
+            print("\nClassification by nearest point:")
             nearest = classify_point(user_point, pikachu_x, pikachu_y, pichu_x, pichu_y)
 
             # Get the 10 nearest points from the user point
