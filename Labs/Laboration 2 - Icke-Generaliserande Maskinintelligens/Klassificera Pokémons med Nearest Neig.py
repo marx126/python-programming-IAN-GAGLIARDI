@@ -289,6 +289,7 @@ def plot_accuracy(accuracies, mean_accuracy):
     plt.legend()
     plt.show()
 
+# Main function, I have tried to keep it as clean and simple as possible
 def main():
     # Read data points file and plot in a graph
     pikachu_x, pikachu_y, pichu_x, pichu_y = load_data(data_points)
