@@ -47,15 +47,13 @@ class Person:
     def __repr__(self):
         return f"Person(name={self._name}, age={self._age}, email={self._email})"
 
-p = Person("Pernilla", 32, "pernilla@gmail.com") 
-print(p)
-
-try:
-    p = Person("Pernilla", 32, "pernillagmail.com")
-except TypeError as ex:
-    print(ex)
-except NameError as ex:
-    print(ex)
-
 if __name__ == "__main__":
-    pass
+    p = Person("Pernilla", 32, "pernilla@gmail.com") 
+    print(p)
+
+    try:
+        p = Person("Pernilla", 32, "pernillagmail.com")
+    except TypeError as ex:
+        print(ex)
+    except NameError as ex:
+        print(ex)
